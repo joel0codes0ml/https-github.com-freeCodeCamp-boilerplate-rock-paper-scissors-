@@ -1,0 +1,26 @@
+def player(prev_play, opponent_history=[]):
+    # Track opponent's history
+    if prev_play:
+        opponent_history.append(prev_play)
+
+    # Pattern prediction
+    def predict_opponent(opponent_history, n=3):
+        if len(opponent_history) < n:
+            return "R"
+        recent = opponent_history[-n:]
+        patterns = {}
+        for i in range(len(opponent_history) - n):
+            pattern = opponent_history[i:i+n]
+            next_move = opponent_history[i+n]
+            if pattern == recent:
+                patterns[next_move] = patterns.get(next_move, 0) + 1
+        if patterns:
+            return max(patterns, key=patterns.get)
+        else:
+            return "R"
+
+    def beat(move):
+        return {"R": "P", "P": "S", "S": "R"}[move]
+
+    prediction = predict_opponent(opponent_history)
+    return beat(prediction)
